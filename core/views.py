@@ -24,18 +24,27 @@ def home(request):
 
 # ✅ Login View
 def login_view(request):
+    # Redirect already authenticated users
+    if request.user.is_authenticated:
+        if hasattr(request.user, 'profile') and request.user.profile.role == 'cr':
+            return redirect('cr_dashboard')
+        else:
+            return redirect('student_dashboard')
+
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
 
+            # Redirect based on role
             if hasattr(user, 'profile') and user.profile.role == 'cr':
-                return HttpResponseRedirect(reverse('cr_dashboard'))
+                return redirect('cr_dashboard')
             else:
-                return HttpResponseRedirect(reverse('student_dashboard'))
+                return redirect('student_dashboard')
     else:
         form = AuthenticationForm()
+        
     return render(request, 'core/login.html', {'form': form})
 
 # ✅ Logout

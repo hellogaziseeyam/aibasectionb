@@ -1,0 +1,36 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2 class="mb-4">🧑‍🏫 CR Dashboard</h2>
+
+<div class="row row-cols-1 row-cols-md-2 g-4">
+  <div class="col">
+    <div class="card text-bg-primary shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Upload Assignment</h5>
+        <p class="card-text">Post a new assignment for the class.</p>
+        <a href="{% url 'upload_assignment' %}" class="btn btn-light">Upload</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="card text-bg-success shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Upload Quiz</h5>
+        <p class="card-text">Schedule an upcoming quiz.</p>
+        <a href="{% url 'upload_quiz' %}" class="btn btn-light">Upload</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="card text-bg-warning shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Upload Notice</h5>
+        <p class="card-text">Share an announcement with students.</p>
+        <a href="{% url 'upload_notice' %}" class="btn btn-dark">Upload</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

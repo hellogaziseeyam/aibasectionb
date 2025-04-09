@@ -1,0 +1,31 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2 class="mb-4">📄 All Assignments</h2>
+
+{% if assignments %}
+  <div class="row row-cols-1 row-cols-md-2 g-4">
+    {% for assignment in assignments %}
+      <div class="col">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">{{ assignment.title }}</h5>
+            <p class="card-text">
+              Course: <strong>{{ assignment.course_name }}</strong><br>
+              Due: <strong>{{ assignment.due_date }}</strong>
+            </p>
+
+            {% if assignment.file %}
+              <a href="{{ assignment.file.url }}" class="btn btn-outline-primary btn-sm" download>📥 Download</a>
+            {% endif %}
+          </div>
+          <div class="card-footer text-muted">
+            Uploaded by: {{ assignment.created_by.username }}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p class="text-muted">No assignments found.</p>
+{% endif %}
+{% endblock %}

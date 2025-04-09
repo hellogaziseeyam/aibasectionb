@@ -12,7 +12,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'dummy-secret')
 DEBUG = True
 
 # Hosts
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'aibasectionb-production.up.railway.app']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'aibasectionb-production-3e5c.up.railway.app']
 
 # Application definition
 INSTALLED_APPS = [

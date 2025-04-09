@@ -26,15 +26,19 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            
+
+            from django.http import HttpResponseRedirect
+            from django.urls import reverse
+
             # Redirect based on role
             if hasattr(user, 'profile') and user.profile.role == 'cr':
-                return redirect('cr_dashboard')
+                return HttpResponseRedirect(reverse('cr_dashboard'))
             else:
-                return redirect('student_dashboard')
+                return HttpResponseRedirect(reverse('student_dashboard'))
     else:
         form = AuthenticationForm()
     return render(request, 'core/login.html', {'form': form})
+
 
 
 # Logout

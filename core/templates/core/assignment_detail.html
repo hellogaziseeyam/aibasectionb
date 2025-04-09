@@ -1,0 +1,18 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div class="container py-3">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h3 class="card-title">{{ assignment.title }}</h3>
+      <h6 class="text-muted">📘 Course: {{ assignment.course_name }}</h6>
+      <p class="mt-3">{{ assignment.description }}</p>
+      <p><strong>🗓️ Due Date:</strong> {{ assignment.due_date }}</p>
+      <p><strong>👤 Uploaded by:</strong> {{ assignment.created_by.username }}</p>
+
+      {% if assignment.document %}
+        <a href="{{ assignment.document.url }}" class="btn btn-outline-primary mt-2" download>📥 Download Attachment</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

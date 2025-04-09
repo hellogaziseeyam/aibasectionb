@@ -1,71 +1,72 @@
 {% extends 'core/base.html' %}
 {% block content %}
-<h2 class="mb-4">🎓 Student Dashboard</h2>
+<div class="container-fluid px-2">
+  <h2 class="mb-4 text-center">🎓 Student Dashboard</h2>
 
-<!-- 🔔 Latest Notices -->
-<h4 class="mt-4">📢 Latest Notices</h4>
-{% if notices %}
-  <ul class="list-group mb-4">
-    {% for notice in notices %}
-      <li class="list-group-item shadow-sm">
-        <strong>{{ notice.title }}</strong><br>
-        <small>{{ notice.content }}</small><br>
-        <span class="text-muted">Posted on {{ notice.date }}</span>
-      </li>
-    {% endfor %}
-  </ul>
-{% else %}
-  <p class="text-muted">No recent notices.</p>
-{% endif %}
+  <!-- 🔔 Latest Notices -->
+  <h4 class="mt-4">📢 Latest Notices</h4>
+  {% if notices %}
+    <ul class="list-group mb-4">
+      {% for notice in notices %}
+        <li class="list-group-item shadow-sm">
+          <strong>{{ notice.title }}</strong><br>
+          <small class="d-block text-break">{{ notice.content }}</small>
+          <span class="text-muted">🕒 {{ notice.date }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-muted">No recent notices.</p>
+  {% endif %}
 
-<!-- 📄 Assignments -->
-<h4>📄 Upcoming Assignments</h4>
-{% if assignments %}
-  <div class="row row-cols-1 row-cols-md-2 g-3 mb-4">
-    {% for assignment in assignments %}
-      <div class="col">
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <h5 class="card-title">{{ assignment.title }}</h5>
-            <h6 class="card-subtitle text-muted">{{ assignment.course_name }}</h6>
-            <p class="card-text">Due: {{ assignment.due_date }}</p>
-            {% if assignment.file %}
-              <a href="{{ assignment.file.url }}" class="btn btn-sm btn-outline-primary" download>📥 Download</a>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-    {% endfor %}
-  </div>
-{% else %}
-  <p class="text-muted">No assignments found.</p>
-{% endif %}
-
-<!-- 📝 Quizzes -->
-<h4>📝 Upcoming Quizzes</h4>
-{% if quizzes %}
-  <div class="row row-cols-1 row-cols-md-2 g-3">
-    {% for quiz in quizzes %}
-      <div class="col">
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <h5 class="card-title">{{ quiz.title }}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">{{ quiz.course_name }}</h6>
-            <p class="card-text">
-              <strong>📅 Date:</strong> {{ quiz.date }}<br>
-              <strong>📖 Syllabus:</strong> {{ quiz.syllabus|truncatechars:100 }}<br>
-              {% if quiz.document %}
-                <a href="{{ quiz.document.url }}" class="btn btn-sm btn-outline-primary mt-2" target="_blank">📄 Document</a><br>
+  <!-- 📄 Assignments -->
+  <h4 class="mt-4">📄 Upcoming Assignments</h4>
+  {% if assignments %}
+    <div class="row g-3 mb-4">
+      {% for assignment in assignments %}
+        <div class="col-12 col-md-6">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">{{ assignment.title }}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">{{ assignment.course_name }}</h6>
+              <p class="card-text mb-2">🗓️ Due: {{ assignment.due_date }}</p>
+              {% if assignment.file %}
+                <a href="{{ assignment.file.url }}" class="btn btn-sm btn-outline-primary w-100" download>📥 Download</a>
               {% endif %}
-              <small class="text-muted">👤 Created by: {{ quiz.created_by.username }}</small>
-            </p>
+            </div>
           </div>
         </div>
-      </div>
-    {% endfor %}
-  </div>
-{% else %}
-  <p class="text-muted">No quizzes scheduled.</p>
-{% endif %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-muted">No assignments found.</p>
+  {% endif %}
 
+  <!-- 📝 Quizzes -->
+  <h4 class="mt-4">📝 Upcoming Quizzes</h4>
+  {% if quizzes %}
+    <div class="row g-3 mb-4">
+      {% for quiz in quizzes %}
+        <div class="col-12 col-md-6">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">{{ quiz.title }}</h5>
+              <h6 class="card-subtitle text-muted">{{ quiz.course_name }}</h6>
+              <p class="card-text mt-2">
+                <strong>📅 Date:</strong> {{ quiz.date }}<br>
+                <strong>📖 Syllabus:</strong> {{ quiz.syllabus|truncatechars:100 }}<br>
+                {% if quiz.document %}
+                  <a href="{{ quiz.document.url }}" target="_blank" class="btn btn-sm btn-outline-primary mt-2 w-100">📄 Document</a><br>
+                {% endif %}
+                <small class="text-muted">👤 Created by: {{ quiz.created_by.username }}</small>
+              </p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-muted">No quizzes scheduled.</p>
+  {% endif %}
+</div>
 {% endblock %}

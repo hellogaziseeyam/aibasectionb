@@ -1,25 +1,28 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from datetime import date
 
 from .forms import AssignmentForm, QuizForm, NoticeForm
 from .models import Profile, Assignment, Quiz, Notice
 from .decorators import role_required
 
-# Home Page
-from django.contrib.auth.decorators import login_required
-
+# ✅ Role-aware Home View (fixes logo link issue)
 def home(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    return redirect('student_dashboard')  # or 'cr_dashboard' if you want role-based
 
-# Login Page
-from .models import Profile
+    if hasattr(request.user, 'profile'):
+        if request.user.profile.role == 'cr':
+            return redirect('cr_dashboard')
+        else:
+            return redirect('student_dashboard')
+    return redirect('student_dashboard')  # fallback
 
+# ✅ Login View
 def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
@@ -27,10 +30,6 @@ def login_view(request):
             user = form.get_user()
             login(request, user)
 
-            from django.http import HttpResponseRedirect
-            from django.urls import reverse
-
-            # Redirect based on role
             if hasattr(user, 'profile') and user.profile.role == 'cr':
                 return HttpResponseRedirect(reverse('cr_dashboard'))
             else:
@@ -39,19 +38,17 @@ def login_view(request):
         form = AuthenticationForm()
     return render(request, 'core/login.html', {'form': form})
 
-
-
-# Logout
+# ✅ Logout
 def logout_view(request):
     logout(request)
     return redirect('login')
 
-# CR Dashboard
+# ✅ CR Dashboard
 @role_required('cr')
 def cr_dashboard(request):
     return render(request, 'core/cr_dashboard.html')
 
-# Upload Assignment (CR only)
+# ✅ Upload Assignment (CR only)
 @role_required('cr')
 def upload_assignment(request):
     if request.method == 'POST':
@@ -65,21 +62,21 @@ def upload_assignment(request):
         form = AssignmentForm()
     return render(request, 'core/upload_assignment.html', {'form': form})
 
-# Upload Quiz (CR only)
+# ✅ Upload Quiz (CR only)
 @role_required('cr')
 def upload_quiz(request):
     if request.method == 'POST':
         form = QuizForm(request.POST, request.FILES)
         if form.is_valid():
-            quiz = form.save(commit=False)  # Don't save to DB yet
-            quiz.created_by = request.user  # ✅ Set creator
-            quiz.save()  # ✅ Now save to DB
+            quiz = form.save(commit=False)
+            quiz.created_by = request.user
+            quiz.save()
             return redirect('quizzes')
     else:
         form = QuizForm()
     return render(request, 'core/upload_quiz.html', {'form': form})
 
-# Upload Notice (CR only)
+# ✅ Upload Notice (CR only)
 @role_required('cr')
 def upload_notice(request):
     if request.method == 'POST':
@@ -91,22 +88,22 @@ def upload_notice(request):
         form = NoticeForm()
     return render(request, 'core/upload_notice.html', {'form': form})
 
-# Assignments Page (view for all users)
+# ✅ Assignments Page
 def assignments(request):
     all_assignments = Assignment.objects.all().order_by('due_date')
     return render(request, 'core/assignments.html', {'assignments': all_assignments})
 
-# Quizzes Page (view for all users)
+# ✅ Quizzes Page
 def quizzes(request):
     all_quizzes = Quiz.objects.all().order_by('date')
     return render(request, 'core/quizzes.html', {'quizzes': all_quizzes})
 
-# Notices Page (view for all users)
+# ✅ Notices Page
 def notices(request):
     all_notices = Notice.objects.all().order_by('-date')
     return render(request, 'core/notices.html', {'notices': all_notices})
 
-# Student Dashboard
+# ✅ Student Dashboard
 @login_required
 def student_dashboard(request):
     notices = Notice.objects.all().order_by('-date')[:3]
@@ -118,6 +115,8 @@ def student_dashboard(request):
         'assignments': upcoming_assignments,
         'quizzes': upcoming_quizzes,
     })
+
+# ✅ Edit Assignment (CR only)
 @role_required('cr')
 def edit_assignment(request, assignment_id):
     assignment = get_object_or_404(Assignment, id=assignment_id, created_by=request.user)
@@ -129,6 +128,8 @@ def edit_assignment(request, assignment_id):
     else:
         form = AssignmentForm(instance=assignment)
     return render(request, 'core/upload_assignment.html', {'form': form})
+
+# ✅ Edit Quiz (CR only)
 @role_required('cr')
 def edit_quiz(request, quiz_id):
     quiz = get_object_or_404(Quiz, id=quiz_id, created_by=request.user)

@@ -1,4 +1,4 @@
-{% extends 'core/base.html' %} 
+{% extends 'core/base.html' %}
 {% block content %}
 <div class="container-fluid px-2">
   <h2 class="mb-4 text-center">📄 All Assignments</h2>
@@ -7,21 +7,24 @@
     <div class="row g-4">
       {% for assignment in assignments %}
         <div class="col-12 col-md-6">
-          <div class="card h-100 shadow-sm">
-            <div class="card-body">
-              <h5 class="card-title">{{ assignment.title }}</h5>
-              <p class="card-text mb-2">
-                <strong>📘 Course:</strong> {{ assignment.course_name }}<br>
-                <strong>🗓️ Due:</strong> {{ assignment.due_date }}
-              </p>
-              {% if assignment.file %}
-                <a href="{{ assignment.file.url }}" class="btn btn-sm btn-outline-primary w-100" download>📥 Download</a>
-              {% endif %}
+          <!-- ✅ Make entire card clickable -->
+          <a href="{{ assignment.get_absolute_url }}" class="text-decoration-none text-dark">
+            <div class="card h-100 shadow-sm hover-shadow">
+              <div class="card-body">
+                <h5 class="card-title">{{ assignment.title }}</h5>
+                <p class="card-text mb-2">
+                  <strong>📘 Course:</strong> {{ assignment.course_name }}<br>
+                  <strong>🗓️ Due:</strong> {{ assignment.due_date }}
+                </p>
+                {% if assignment.file %}
+                  <span class="btn btn-sm btn-outline-primary w-100">📥 Download Available</span>
+                {% endif %}
+              </div>
+              <div class="card-footer text-muted small">
+                👤 Uploaded by: {{ assignment.created_by.username }}
+              </div>
             </div>
-            <div class="card-footer text-muted small">
-              👤 Uploaded by: {{ assignment.created_by.username }}
-            </div>
-          </div>
+          </a>
         </div>
       {% endfor %}
     </div>

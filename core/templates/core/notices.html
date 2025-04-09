@@ -6,11 +6,14 @@
   {% if notices %}
     <div class="list-group">
       {% for notice in notices %}
-        <div class="list-group-item list-group-item-action mb-3 shadow-sm rounded p-3">
-          <h5 class="mb-2">{{ notice.title }}</h5>
-          <p class="mb-2 small">{{ notice.content }}</p>
-          <small class="text-muted">📅 Posted on {{ notice.date }}</small>
-        </div>
+        <!-- ✅ Full clickable notice card -->
+        <a href="{{ notice.get_absolute_url }}" class="text-decoration-none text-dark">
+          <div class="list-group-item list-group-item-action mb-3 shadow-sm rounded p-3">
+            <h5 class="mb-2">{{ notice.title }}</h5>
+            <p class="mb-2 small">{{ notice.content|truncatechars:120 }}</p>
+            <small class="text-muted">📅 Posted on {{ notice.date }}</small>
+          </div>
+        </a>
       {% endfor %}
     </div>
   {% else %}

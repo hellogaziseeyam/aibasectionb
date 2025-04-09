@@ -141,3 +141,16 @@ def edit_quiz(request, quiz_id):
     else:
         form = QuizForm(instance=quiz)
     return render(request, 'core/upload_quiz.html', {'form': form})
+from django.shortcuts import get_object_or_404
+
+def assignment_detail(request, pk):
+    assignment = get_object_or_404(Assignment, pk=pk)
+    return render(request, 'core/assignment_detail.html', {'assignment': assignment})
+
+def quiz_detail(request, pk):
+    quiz = get_object_or_404(Quiz, pk=pk)
+    return render(request, 'core/quiz_detail.html', {'quiz': quiz})
+
+def notice_detail(request, pk):
+    notice = get_object_or_404(Notice, pk=pk)
+    return render(request, 'core/notice_detail.html', {'notice': notice})

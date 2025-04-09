@@ -7,24 +7,27 @@
     <div class="row g-4">
       {% for quiz in quizzes %}
         <div class="col-12 col-md-6">
-          <div class="card shadow-sm h-100">
-            <div class="card-body">
-              <h5 class="card-title">{{ quiz.title }}</h5>
-              <h6 class="card-subtitle mb-2 text-muted">{{ quiz.course_name }}</h6>
-              <p class="card-text mb-1">
-                <strong>📅 Date:</strong> {{ quiz.date }}<br>
-                <strong>📖 Syllabus:</strong> {{ quiz.syllabus|truncatechars:150 }}
-              </p>
+          <!-- ✅ Make entire card clickable -->
+          <a href="{{ quiz.get_absolute_url }}" class="text-decoration-none text-dark">
+            <div class="card shadow-sm h-100">
+              <div class="card-body">
+                <h5 class="card-title">{{ quiz.title }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ quiz.course_name }}</h6>
+                <p class="card-text mb-1">
+                  <strong>📅 Date:</strong> {{ quiz.date }}<br>
+                  <strong>📖 Syllabus:</strong> {{ quiz.syllabus|truncatechars:150 }}
+                </p>
 
-              {% if quiz.document %}
-                <a href="{{ quiz.document.url }}" target="_blank" class="btn btn-sm btn-outline-primary w-100 mb-2">📄 Download Document</a>
-              {% endif %}
+                {% if quiz.document %}
+                  <span class="btn btn-sm btn-outline-primary w-100 mb-2">📄 Document Available</span>
+                {% endif %}
 
-              <p class="text-muted small mb-0">
-                👤 Created by: {{ quiz.created_by.username }}
-              </p>
+                <p class="text-muted small mb-0">
+                  👤 Created by: {{ quiz.created_by.username }}
+                </p>
+              </div>
             </div>
-          </div>
+          </a>
         </div>
       {% endfor %}
     </div>

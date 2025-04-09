@@ -13,6 +13,8 @@ DEBUG = True
 
 # Hosts
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'aibasectionb-production-3e5c.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://aibasectionb-production-3e5c.up.railway.app']
+
 
 # Application definition
 INSTALLED_APPS = [

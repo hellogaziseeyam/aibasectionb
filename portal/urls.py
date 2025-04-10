@@ -19,7 +19,9 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('core.urls')),  # 👈 include the core app’s URLs
+    path('', include('core.urls')),
+    path('createsuper/', create_superuser_view),
+# 👈 include the core app’s URLs
 ]
 from django.conf import settings
 from django.conf.urls.static import static

@@ -163,3 +163,13 @@ def quiz_detail(request, pk):
 def notice_detail(request, pk):
     notice = get_object_or_404(Notice, pk=pk)
     return render(request, 'core/notice_detail.html', {'notice': notice})
+
+from django.http import HttpResponse
+from django.contrib.auth.models import User
+
+def create_superuser_view(request):
+    if not User.objects.filter(username='admin').exists():
+        User.objects.create_superuser('admin', 'admin@example.com', 'adminpass123')
+        return HttpResponse("✅ Superuser created successfully.")
+    return HttpResponse("⚠️ Superuser already exists.")
+

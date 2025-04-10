@@ -15,7 +15,15 @@ class Profile(models.Model):
 
 
 class Assignment(models.Model):
-    course_name = models.CharField(max_length=100)
+    COURSE_CHOICES = [
+        ('Functional English', 'Functional English'),
+        ('Computer and its Application', 'Computer and its Application'),
+        ('Presentation Skill Development', 'Presentation Skill Development'),
+        ('Principles of Management', 'Principles of Management'),
+        ('Environmental Studies', 'Environmental Studies'),
+    ]
+
+    course_name = models.CharField(max_length=100, choices=COURSE_CHOICES)
     title = models.CharField(max_length=200)
     description = models.TextField()
     document = models.FileField(upload_to='assignment_docs/', blank=True, null=True)
@@ -33,7 +41,15 @@ class Assignment(models.Model):
 
 
 class Quiz(models.Model):
-    course_name = models.CharField(max_length=200)
+    COURSE_CHOICES = [
+        ('Functional English', 'Functional English'),
+        ('Computer and its Application', 'Computer and its Application'),
+        ('Presentation Skill Development', 'Presentation Skill Development'),
+        ('Principles of Management', 'Principles of Management'),
+        ('Environmental Studies', 'Environmental Studies'),
+    ]
+
+    course_name = models.CharField(max_length=200, choices=COURSE_CHOICES)
     title = models.CharField(max_length=200)
     syllabus = models.TextField()
     document = models.FileField(upload_to='quiz_docs/', blank=True, null=True)

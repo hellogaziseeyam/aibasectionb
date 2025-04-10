@@ -167,9 +167,3 @@ def notice_detail(request, pk):
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 
-def create_superuser_view(request):
-    if not User.objects.filter(username='admin').exists():
-        User.objects.create_superuser('admin', 'admin@example.com', 'adminpass123')
-        return HttpResponse("✅ Superuser created successfully.")
-    return HttpResponse("⚠️ Superuser already exists.")
-

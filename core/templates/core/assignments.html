@@ -1,35 +1,29 @@
 {% extends 'core/base.html' %}
 {% block content %}
-<div class="container-fluid px-2">
-  <h2 class="mb-4 text-center">📄 All Assignments</h2>
+<div class="container mt-4 mb-5">
+  <div class="mx-auto" style="max-width: 800px;">
+    <div class="p-4 border rounded bg-white">
+      <h2 class="mb-2">{{ assignment.title }}</h2>
+      <h5 class="text-primary fw-semibold mb-3">📘 {{ assignment.course_name }}</h5>
 
-  {% if assignments %}
-    <div class="row g-4">
-      {% for assignment in assignments %}
-        <div class="col-12 col-md-6">
-          <!-- ✅ Make entire card clickable -->
-          <a href="{{ assignment.get_absolute_url }}" class="text-decoration-none text-dark">
-            <div class="card h-100 shadow-sm hover-shadow">
-              <div class="card-body">
-                <h5 class="card-title">{{ assignment.title }}</h5>
-                <p class="card-text mb-2">
-                  <strong>📘 Course:</strong> {{ assignment.course_name }}<br>
-                  <strong>🗓️ Due:</strong> {{ assignment.due_date }}
-                </p>
-                {% if assignment.file %}
-                  <span class="btn btn-sm btn-outline-primary w-100">📥 Download Available</span>
-                {% endif %}
-              </div>
-              <div class="card-footer text-muted small">
-                👤 Uploaded by: {{ assignment.created_by.username }}
-              </div>
-            </div>
-          </a>
-        </div>
-      {% endfor %}
+      <p class="mb-3">{{ assignment.description }}</p>
+
+      <p class="mb-1">
+        <i class="bi bi-calendar-event"></i>
+        <strong>Due Date:</strong> {{ assignment.due_date }}
+      </p>
+
+      <p class="mb-3">
+        <i class="bi bi-person-circle"></i>
+        <strong>Uploaded by:</strong> {{ assignment.created_by.username }}
+      </p>
+
+      {% if assignment.document %}
+        <a href="{{ assignment.document.url }}" download class="btn btn-outline-success mt-2">
+          📥 Download Attachment
+        </a>
+      {% endif %}
     </div>
-  {% else %}
-    <p class="text-muted">No assignments found.</p>
-  {% endif %}
+  </div>
 </div>
 {% endblock %}

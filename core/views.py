@@ -164,6 +164,3 @@ def notice_detail(request, pk):
     notice = get_object_or_404(Notice, pk=pk)
     return render(request, 'core/notice_detail.html', {'notice': notice})
 
-from django.http import HttpResponse
-from django.contrib.auth.models import User
-

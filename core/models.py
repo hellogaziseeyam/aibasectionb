@@ -1,6 +1,12 @@
 from django.contrib.auth.models import User
 from django.db import models
-from django.urls import reverse  # ✅ Added for get_absolute_url
+from django.urls import reverse
+
+# 🔹 Common section choices
+SECTION_CHOICES = (
+    ('A', 'Section A'),
+    ('B', 'Section B'),
+)
 
 class Profile(models.Model):
     ROLE_CHOICES = (
@@ -9,9 +15,10 @@ class Profile(models.Model):
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
+    section = models.CharField(max_length=1, choices=SECTION_CHOICES)  # 👈 New field
 
     def __str__(self):
-        return f"{self.user.username} ({self.get_role_display()})"
+        return f"{self.user.username} ({self.get_role_display()} - {self.get_section_display()})"
 
 
 class Assignment(models.Model):
@@ -23,6 +30,7 @@ class Assignment(models.Model):
         ('Environmental Studies', 'Environmental Studies'),
     ]
 
+    section = models.CharField(max_length=1, choices=SECTION_CHOICES, default='B')
     course_name = models.CharField(max_length=100, choices=COURSE_CHOICES)
     title = models.CharField(max_length=200)
     description = models.TextField()
@@ -49,6 +57,7 @@ class Quiz(models.Model):
         ('Environmental Studies', 'Environmental Studies'),
     ]
 
+    section = models.CharField(max_length=1, choices=SECTION_CHOICES, default='B')
     course_name = models.CharField(max_length=200, choices=COURSE_CHOICES)
     title = models.CharField(max_length=200)
     syllabus = models.TextField()
@@ -67,6 +76,7 @@ class Quiz(models.Model):
 
 
 class Notice(models.Model):
+    section = models.CharField(max_length=1, choices=SECTION_CHOICES, default='B')
     title = models.CharField(max_length=200)
     content = models.TextField()
     date = models.DateField(auto_now_add=True)

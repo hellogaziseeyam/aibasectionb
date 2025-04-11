@@ -10,11 +10,11 @@ from .forms import AssignmentForm, QuizForm, NoticeForm
 from .models import Profile, Assignment, Quiz, Notice
 from .decorators import role_required
 
-# ✅ Role-aware Home View (fixes logo link issue)
+# ✅ Home View (based on user role)
 def home(request):
     if not request.user.is_authenticated:
         return redirect('login')
-
+    
     if hasattr(request.user, 'profile'):
         if request.user.profile.role == 'cr':
             return redirect('cr_dashboard')
@@ -24,7 +24,6 @@ def home(request):
 
 # ✅ Login View
 def login_view(request):
-    # Redirect already authenticated users
     if request.user.is_authenticated:
         if hasattr(request.user, 'profile') and request.user.profile.role == 'cr':
             return redirect('cr_dashboard')
@@ -37,7 +36,6 @@ def login_view(request):
             user = form.get_user()
             login(request, user)
 
-            # Redirect based on role
             if hasattr(user, 'profile') and user.profile.role == 'cr':
                 return redirect('cr_dashboard')
             else:
@@ -47,7 +45,7 @@ def login_view(request):
         
     return render(request, 'core/login.html', {'form': form})
 
-# ✅ Logout
+# ✅ Logout View
 def logout_view(request):
     logout(request)
     return redirect('login')
@@ -98,33 +96,40 @@ def upload_notice(request):
     return render(request, 'core/upload_notice.html', {'form': form})
 
 # ✅ Assignments Page
+@login_required
 def assignments(request):
-    all_assignments = Assignment.objects.all().order_by('due_date')
+    user_section = request.user.profile.section
+    all_assignments = Assignment.objects.filter(section=user_section).order_by('due_date')
     return render(request, 'core/assignments.html', {'assignments': all_assignments})
 
 # ✅ Quizzes Page
+@login_required
 def quizzes(request):
-    all_quizzes = Quiz.objects.all().order_by('date')
+    user_section = request.user.profile.section
+    all_quizzes = Quiz.objects.filter(section=user_section).order_by('date')
     return render(request, 'core/quizzes.html', {'quizzes': all_quizzes})
 
 # ✅ Notices Page
+@login_required
 def notices(request):
-    all_notices = Notice.objects.all().order_by('-date')
+    user_section = request.user.profile.section
+    all_notices = Notice.objects.filter(section=user_section).order_by('-date')
     return render(request, 'core/notices.html', {'notices': all_notices})
 
 # ✅ Student Dashboard
 @login_required
 def student_dashboard(request):
-    notices = Notice.objects.all().order_by('-date')[:3]
-    upcoming_assignments = Assignment.objects.filter(due_date__gte=date.today()).order_by('due_date')[:5]
-    upcoming_quizzes = Quiz.objects.filter(date__gte=date.today()).order_by('date')[:5]
+    section = request.user.profile.section
+    notices = Notice.objects.filter(section=section).order_by('-date')[:3]
+    upcoming_assignments = Assignment.objects.filter(section=section, due_date__gte=date.today()).order_by('due_date')[:5]
+    upcoming_quizzes = Quiz.objects.filter(section=section, date__gte=date.today()).order_by('date')[:5]
 
     return render(request, 'core/student_dashboard.html', {
         'notices': notices,
         'assignments': upcoming_assignments,
         'quizzes': upcoming_quizzes,
     })
-
+    
 # ✅ Edit Assignment (CR only)
 @role_required('cr')
 def edit_assignment(request, assignment_id):
@@ -150,17 +155,19 @@ def edit_quiz(request, quiz_id):
     else:
         form = QuizForm(instance=quiz)
     return render(request, 'core/upload_quiz.html', {'form': form})
-from django.shortcuts import get_object_or_404
 
+# ✅ Detail Views
+@login_required
 def assignment_detail(request, pk):
     assignment = get_object_or_404(Assignment, pk=pk)
     return render(request, 'core/assignment_detail.html', {'assignment': assignment})
 
+@login_required
 def quiz_detail(request, pk):
     quiz = get_object_or_404(Quiz, pk=pk)
     return render(request, 'core/quiz_detail.html', {'quiz': quiz})
 
+@login_required
 def notice_detail(request, pk):
     notice = get_object_or_404(Notice, pk=pk)
     return render(request, 'core/notice_detail.html', {'notice': notice})
-

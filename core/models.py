@@ -39,7 +39,7 @@ class Assignment(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.course_name} - {self.title}"
+        return f"{self.course_name} - {self.title}"x
 
     def get_absolute_url(self):
         return reverse('assignment_detail', args=[str(self.id)])

@@ -9,6 +9,15 @@ from datetime import date
 from .forms import AssignmentForm, QuizForm, NoticeForm
 from .models import Profile, Assignment, Quiz, Notice
 from .decorators import role_required
+from django.http import HttpResponse
+from django.core.management import call_command
+from django.contrib.admin.views.decorators import staff_member_required
+
+@staff_member_required  # optional: restrict to admin
+def trigger_migrate(request):
+    call_command('migrate')
+    return HttpResponse("✅ Migrations applied.")
+
 
 # ✅ Home View (based on user role)
 def home(request):
@@ -129,7 +138,7 @@ def student_dashboard(request):
         'assignments': upcoming_assignments,
         'quizzes': upcoming_quizzes,
     })
-    
+
 # ✅ Edit Assignment (CR only)
 @role_required('cr')
 def edit_assignment(request, assignment_id):
